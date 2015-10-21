@@ -56,7 +56,7 @@ Holding heavy board performed more than holding light board on:
 ## Why we reproduce this study?
 
 - Understand between-participant design  
-- Learn how to evaluate the power  
+- Learn how to evaluate the sample size  
 - Exact replication vs. Conceputal replication
 - Open the eye to pick up the study  
 
@@ -81,7 +81,7 @@ names(Assign)[Assign == "Light"]
 - Has to be evaluated by IRB
 - Check operative IRB websites: NTU, NCKU, FJU, ...
 
-## How to Evaluate Power
+## How to Evaluate Sample Size
 1. Estimate the effect size
 2. Compute the power by effect size
 3. Decide the sample size by the effect size
@@ -138,7 +138,9 @@ power.study1 <- pwr.anova.test(f=d.study1, k=2, n=40, sig.level=0.05)
 power.study1
 ```
 
-## Compute the power by effect size
+In the case without available sample size, we need the power to evaluate the sample size.  
+
+## Evluate the effect size by sample size
 How large an effect size?
 
 ```
@@ -170,3 +172,15 @@ rbind(n, power)
 
 ## Idea
 ![Night_Market_news](News.png)
+
+## How to Write Proposal
+- Introduction: Autopsy of the original study
+  1. Exact replication vs. Conceptual replication
+  2. Which Study (1,2,3,4)
+  3. Prediction
+- Method
+  1. Sample: students in the campus; volunteers in the public circumstances  
+  2. Treatments: Wight of Board; Questions
+  3. Measurement: Value; Agreement
+  4. Proceduree: Situation(in lab, outside lab); Assignment
+  5. Analysis: coodbook; criterions to summarize data
