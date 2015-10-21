@@ -1,0 +1,172 @@
+---
+title: Reproduce "Weight as an Embodiment of Importance"
+
+author: 
+- "陳紹慶"  
+- "Jostmann, N. B., Lakens, D., & Schubert, T. W. (2009). Weight as an embodiment of importance. Psychological Science, 20, 1169-1174."
+output: 
+  ioslides_presentation:
+    widescreen: true
+    transition: slower
+---
+
+## Why this study?
+
+- Interesting hypothesis
+- Straight experimental design 
+- Failures in the replications
+- Check [the original studies](Psychological Science-2009-Jostmann-1169-74.pdf)
+
+## Hypothesis
+
+- Abstract concept of **IMPORTANCE** is grounded in sensory experiences of **WEIGHT** 
+- Experiencing **WEIGHT** could influence judgments of **IMPORTANCE**
+- Gain more gold from someone, give someone more credits.
+- An industry contribute the most proportion to GDP, the government has to put more resource on this industry. 
+
+## Design: Apparent Spec 
+ 
+1. 35 cm X 23 cm X 4 cm  
+2. Light(empty): 657g; Heavy(add papers): 1,039g  
+![clipboard](CB3005.jpg)
+
+## Design: Goals of Studies
+
+1. Judge the value of foreign currencies  
+2. Which voice (student, commit member) in decision-making procedures would be more important  
+3. Consistency of evaluating the city (Amsterdam) and evaluating the major  
+4. Agreement on the strong argument and weak argument for the community policy(Build subway staion in the campus)
+
+## Findings
+
+Holding heavy board performed more than holding light board on:  
+1. the foreign currencies are more valuable  
+2. the sudent's voice  
+3. consistency of evaluations(higher correlation)  
+4. extremely agree the strong arguments and extremely disagree the weak arguments
+
+## Failures in the replications
+
+- [psychfiledrawer.org](http://www.psychfiledrawer.org): Archives attempted replications of specific studies and whether replication was achieved.  
+
+- [5 replications](Replication_Records.html) on Jostmann, Lakens, and Schubert (2009)
+
+- 1 successed; 4 failed
+
+## Why we reproduce this study?
+
+- Understand between-participant design  
+- Learn how to evaluate the power  
+- Exact replication vs. Conceputal replication
+- Open the eye to pick up the study  
+
+## Between participant design  
+
+- Randomly assign the experimental treatments  
+- Whcih treatment could be assign? (Write up in your proposal)  
+
+## Random Assignment of Treatments
+```{r Assign}
+N <- 40; set.seed(1); Assign <- sample(c("Heavy","Light"), N, replace = TRUE)
+table(Assign)
+names(Assign) <- 1:N
+names(Assign)[Assign == "Heavy"]
+names(Assign)[Assign == "Light"]
+```
+
+## Random Assignment of Treatments
+
+- Could this treatment violate research ethic?
+- Without harm for the participants after the study
+- Has to be evaluated by IRB
+- Check operative IRB websites: NTU, NCKU, FJU, ...
+
+## How to Evaluate Power
+1. Estimate the effect size
+2. Compute the power by effect size
+3. Decide the sample size by the effect size
+
+## Estimate the effect size
+*esComp()* in [furncions.r](functions.r)  
+We have this function from [RP:P project]
+```
+esComp <- function(
+  x,
+  df1,
+  df2,
+  N,
+  esType){
+  esComp <- ifelse(esType=="t",
+                   sqrt((x^2*(1 / df2)) / (((x^2*1) / df2) + 1)),
+                   ifelse(
+                     esType=="F",
+                     sqrt((x*(df1 / df2)) / (((x*df1) / df2) + 1))*sqrt(1/df1),
+                     ifelse(
+                       esType=="r",
+                       x,
+                       ifelse(
+                         esType=="Chi2",
+                         sqrt(x/N),
+                         ifelse(
+                           esType == "z",
+                           tanh(x * sqrt(1/(N-3))), 
+                           NA
+                         )
+                       )
+                     )
+                   ))
+  
+  return(esComp)
+}
+```
+
+## Estimate the effect size
+```{r effectsize, cache=TRUE}
+source("functions.r")
+# Study 1
+# N = 40
+# F(1, 39) = 4.86
+d.study1 <- esComp(4.86, 1, 39, 40, "F")
+d.study1
+```
+
+## Compute the power by effect size
+R package *pwr*
+```{r pwr, cache=TRUE, message=FALSE}
+require(pwr)
+power.study1 <- pwr.anova.test(f=d.study1, k=2, n=40, sig.level=0.05)
+power.study1
+```
+
+## Compute the power by effect size
+How large an effect size?
+
+```
+# Type this code in your console:
+help(cohen.ES)
+```
+
+## Decide the sample size by the effect size
+```{r powerplot, cache=TRUE, message=FALSE}
+n <- seq(10, 100, by = 10) # Expected number of participants in replication study
+power <- pwr.anova.test(f=d.study1, k=2, n = n, sig.level=0.05)$power
+rbind(n, power)
+```
+
+## Exact replication vs. Conceputal replication
+
+- cited from [Diener & Biswas-Diener(2015)](http://nobaproject.com/modules/the-replication-crisis-in-psychology)
+- **Exact replication:** A scientific attempt to *exactly copy the scientific methods used in an earlier study* in an effort to determine _whether the results are consistent_. The same—or similar—results are an indication that the findings are accurate.  
+- **Conceptual replication:** A scientific attempt to *copy the scientific hypothesis used in an earlier study* in an effort to determine _whether the results will generalize to different samples, times, or situations_. The same—or similar—results are an indication that the findings are generalizable.
+
+## Will we have a exact replication?
+- Can we copy all the details of method in the original study?  
+- Which treatment is impossible?
+- Which measurement is impossible?
+
+## Will we have a conceptual replication?
+- Will the original hypothesis work when the conditions to gather data are different?
+- Can we run the treatments and measurements in different samples, times or situations?
+
+## Idea
+![Night_Market_news](News.png)
